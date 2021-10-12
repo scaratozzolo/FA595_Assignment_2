@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+import glob
 
 
 def create_company_pairs(num_pairs=50):
@@ -23,5 +24,23 @@ def create_company_pairs(num_pairs=50):
 
         i += 1
 
-    pairs.to_csv("name_purpose_pairs.csv", index=False)
+    pairs.to_csv("data/name_purpose_pairs.csv", index=False)
     return pairs
+
+
+def combine_files():
+
+    df = pd.DataFrame({"Company_Name":[], "Company_Purpose":[]})
+
+    files = glob.glob("data/*.csv")
+    for file in files:
+        tempdf = pd.read_csv(file)
+        tempdf.columns = df.columns
+        df = df.append(tempdf, ignore_index=True)
+
+    return df
+
+
+if __name__ == '__main__':
+
+    print(combine_files())
