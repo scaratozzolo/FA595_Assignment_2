@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import glob
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 
 def create_company_pairs(num_pairs=50):
@@ -41,6 +42,22 @@ def combine_files():
     return df
 
 
+def perform_nlp(df):
+    
+    sid = SentimentIntensityAnalyzer()
+
+    df["Sentiment"] = df["Company_Purpose"].apply(lambda x: sid.polarity_scores(x)['compound'])
+
+    df.sort_values("Sentiment", ascending=False, inplace=True)
+
+    print(df.head())
+    print(df.tail())
+    df.to_csv("output.csv", index=False)
+    return df
+
+
+
 if __name__ == '__main__':
 
-    print(combine_files())
+    # print(perform_nlp(combine_files()))
+    perform_nlp(combine_files())
