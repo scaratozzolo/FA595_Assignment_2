@@ -35,8 +35,17 @@ def combine_files():
 
     files = glob.glob("data/*.csv")
     for file in files:
-        tempdf = pd.read_csv(file)
-        tempdf.columns = df.columns
+        try:
+            tempdf = pd.read_csv(file)
+        except:
+            tempdf = pd.read_csv(file, sep="\t")
+        
+        try:
+            tempdf.columns = df.columns
+        except:
+            tempdf.drop("Unnamed: 0", axis=1, inplace=True)
+            tempdf.columns = df.columns
+
         df = df.append(tempdf, ignore_index=True)
 
     return df
@@ -59,5 +68,7 @@ def perform_nlp(df):
 
 if __name__ == '__main__':
 
-    # print(perform_nlp(combine_files()))
+    # print(combine_files())
     perform_nlp(combine_files())
+    # perform_nlp(combine_files())
+    # print(pd.read_csv("data/fake_company.csv", sep="\t"))
