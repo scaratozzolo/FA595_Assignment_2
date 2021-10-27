@@ -59,8 +59,8 @@ def perform_nlp(df):
 
     df.sort_values("Sentiment", ascending=False, inplace=True)
 
-    print(df.head())
-    print(df.tail())
+    df.head().to_csv("head.csv")
+    df.tail().to_csv("tail.csv")
     df.to_csv("output.csv", index=False)
     return df
 
